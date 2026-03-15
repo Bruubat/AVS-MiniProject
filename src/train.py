@@ -16,7 +16,7 @@ def train_model(model, train_dataset, val_dataset=None, epochs=20, batch_size=8,
     
     # 2. Loss Function and Optimizer
     # Binary Cross Entropy with Logits is standard for binary segmentation
-    criterion = nn.BCEWithLogitsLoss() 
+    criterion = nn.BCELoss() 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     
     # Optional: Learning rate scheduler (reduces LR if performance plateaus)

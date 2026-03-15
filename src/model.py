@@ -7,7 +7,7 @@ model = smp.Unet(
     encoder_weights="imagenet", 
     in_channels=3, 
     classes=1, 
-    activation='sigmoid'
+    activation= "sigmoid"
 )
 
 def get_unet_model():

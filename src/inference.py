@@ -2,10 +2,10 @@ import cv2
 import torch
 import numpy as np
 import os
-# DODAJ TEN IMPORT:
 from src.dataset import train_transform 
 
-def detect_and_flag(image_path, model, threshold=0.45, pixel_threshold=50):
+def detect_and_flag(image_path, model, threshold=0.40, pixel_threshold=45):
+    #Dobry wynik dla 0.40 i 45 - po około 70%
     # DODAJ TĘ LINIĘ (aby wiedzieć czy użyć procesora czy karty graficznej):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     

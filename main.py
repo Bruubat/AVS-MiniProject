@@ -10,7 +10,7 @@ from src.inference import detect_and_flag
 def main():
     # --- KONFIGURACJA ---
     # Zmień na True, jeśli chcesz trenować. Zmień na False, jeśli chcesz tylko testować.
-    TRAIN_MODE = False 
+    TRAIN_MODE = False
     
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     TRAIN_DIR = os.path.join(BASE_DIR, 'data', 'train')
@@ -35,7 +35,7 @@ def main():
         train_model(
             model=model, 
             train_dataset=dataset, 
-            epochs=10, 
+            epochs=25, 
             batch_size=4, 
             save_path=MODEL_WEIGHTS_PATH
         )
@@ -70,7 +70,7 @@ def main():
 
     # Lista folderów do sprawdzenia
     subfolders = ['good', 'defective']
-
+    TP, TN, FP, FN = 0, 0, 0, 0
     for subfolder in subfolders:
         test_folder = os.path.join(TRAIN_DIR, subfolder)
         
@@ -98,10 +98,18 @@ def main():
                 # Formułowanie wyniku i prosta logika oceny poprawności
                 if is_defective:
                     status = "🔴 WADLIWA"
-                    if subfolder == 'defective': correct_count += 1
+                    if subfolder == 'defective': 
+                        correct_count += 1
+                        TP += 1  # True Positive: Wykryto faktyczną wadę
+                    else:
+                        FP += 1
                 else:
                     status = "🟢 DOBRA"
-                    if subfolder == 'good': correct_count += 1
+                    if subfolder == 'good': 
+                        correct_count += 1
+                        TN += 1  # True Negative: Poprawnie przepuszczono zdrową
+                    else:
+                        FN += 1
                 
                 print(f"{file_name:<30} | {status}")
 
@@ -111,6 +119,17 @@ def main():
             print(f"PODSUMOWANIE {subfolder}: Poprawnie rozpoznano {correct_count}/{len(files)} ({accuracy:.1f}%)")
         else:
             print(f"BŁĄD: Folder {test_folder} nie istnieje!")
+
+    precision = TP / (TP + FP) if (TP + FP) > 0 else 0.0
+    recall = TP / (TP + FN) if (TP + FN) > 0 else 0.0
+    f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+    print("\n" + "="*55)
+    print(f"{'METRYKI JAKOŚCI':^55}")
+    print("="*55)
+    print(f"Precision (Precyzja): {precision:.2%}")
+    print(f"Recall (Czułość):    {recall:.2%}")
+    print(f"F1-Score (Balans):   {f1_score:.2%}")
+    print("="*55)
 
     print("\n" + "="*60)
     print(f"{'KONIEC TESTÓW':^60}")

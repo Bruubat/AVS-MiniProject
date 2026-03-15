@@ -64,8 +64,9 @@ class ToothbrushDataset(Dataset):
 
         return image, mask.unsqueeze(0)
 
-# Define Transformations
+#Define Transformations
 train_transform = A.Compose([
+
     A.Resize(256, 256),
     A.HorizontalFlip(p=0.5),
     A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
